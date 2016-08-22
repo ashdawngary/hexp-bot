@@ -175,8 +175,27 @@ def login(ip = "None",clearlogs = True):
 def logout():
     print "[INETLOGOUT]: Succesffuly logged out of the internet."
     driver.get(base_link+"internet?view=logout")
+def validIP(ip):
+    c = ip.split(".")
+    for i in c:
+        try:
+            int(c)
+            if 0 < int(c) < 256:
+                pass
+            else:
+                return False
+        except:
+            return False
+    if len(c) != 4:
+        return False
+def deleteSoftwareviaID(ID,ip = "None",logged_in = False,bf = True,clearlogs = True):
+    
+    if bf and not logged_in:
+        print "[DELETESOFTWARE]: Clearly you have not been to this ip before."
+        discover_ip(ip)
+        deleteSoftwareviaID(ip,logged_in = True,)
 
-
+    
 def deleteSoftwareMission():
     article_data =driver.find_element_by_class_name("article-post").text
     article_data = article_data.split("and remove the file ")[1]
@@ -198,6 +217,7 @@ def deleteSoftwareMission():
     if p_id == "Undefined":
         return "Unable to find program on server."
     print "[DELETEMISSION]: Found ID: %s"%(p_id)
+    # use l-format like https://legacy.hackerexperience.com/internet?view=software&cmd=del&id=8726969
     
 
 
