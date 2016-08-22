@@ -248,9 +248,9 @@ def serverStats():
     # Runs server-stats on current-ip
     c = getSoftwares()
     data = {}
-    for  i in data:
-        if driver.find_element_by_id(i[1]).get_attribute("class") == "installed":
-            print "[SSTAT]: found %s"%(i[0])
+    for  i in c:
+        if driver.find_element_by_id(i[1]).get_attribute("class") == u"installed":
+            #print "[SSTAT]: found %s"%(i[0])
             if ".hash" in i[0]:
                 data["hasher"] = i
             elif ".crc" in i[0]:
@@ -259,6 +259,9 @@ def serverStats():
                 data["hider"] = i
             elif ".skr" in i[0]:
                 data["seeker"] = i
+        else:
+            pass
+            #print "[SSTAT]: %s prog with class of [%s]"%(i[0],driver.find_element_by_id(i[1]).get_attribute("class"))
     return data
 
 def deleteobject(obj,local = False,log_in = True,ip = "None"):
@@ -275,7 +278,7 @@ def deleteobject(obj,local = False,log_in = True,ip = "None"):
         except:
             print "[DOBJ]: Didnt find object of type \"%s\""%(obj)
             return None
-        print "[DOBJ]: Deleting %s with id %s"%(p_stat[0],pstat[1])
+        print "[DOBJ]: Deleting %s with id %s"%(p_stat[0],p_stat[1])
         deleteSoftwareviaID(p_stat[1],ip = ip,logged_in = True,bf = False,clearlogs = True)
     else:
         print "[DOBJ]: Deleting object of type %s"%(obj)
@@ -285,7 +288,7 @@ def deleteobject(obj,local = False,log_in = True,ip = "None"):
         except:
             print "[DOBJ]: Didnt find object of type \"%s\""%(obj)
             return None
-        print "[DOBJ]: Deleting %s with id %s"%(p_stat[0],pstat[1])
+        print "[DOBJ]: Deleting %s with id %s"%(p_stat[0],p_stat[1])
         deletelocalSoftware(p_stat[1])
     
 def deleteSoftwareviaID(ID,ip = "None",logged_in = False,bf = True,clearlogs = True):
@@ -333,15 +336,35 @@ def deleteSoftwareviaID(ID,ip = "None",logged_in = False,bf = True,clearlogs = T
             if clearlogs:
                 clearinternetlogs()
 
-            
+def downloadobject(obj,log_in = True,ip = "None"):
+    print "[DOBJ]: Downloading object of type %s"%(obj)
+    if not validIP(ip):
+        return "error not a valid ip"
+    if log_in:
+        login(ip = ip)
+    print "[DOBJ]: Extracting programs ... "
+    activeprograms = serverStats()
+    try:
+        p_stat = activeprograms[obj]
+    except:
+        print "[DOBJ]: Didnt find object of type \"%s\""%(obj)
+        return None
+    print "[DOBJ]: Downloading %s with id %s"%(p_stat[0],p_stat[1])
+    downloadviaID(p_stat[1],ip = ip,loginip = True,bf = False,clearlogs = True)
+
+        
 def deleteSoftwareMission():
     article_data =driver.find_element_by_class_name("article-post").text
     article_data = article_data.split("and remove the file ")[1]
-    program = article_data.split(".  I am")[0]
+    program = article_data.split("I am")[0]
+    program.strip(" ")
+    program.strip(".")
     print "[DELETEMISSION]: Program Name: %s"%(program)
     
     ip = article_data.split("Ping them at ")[1]
-    ip = ip.split(".  We")[0]
+    ip = ip.split("We")[0]
+    ip = ip.strip(" ")
+    ip = ip.strip(".")
     print "[DELETEMISSION]: IP to delete from: %s"%(ip)
 
     ## Data parsing Done.
@@ -355,6 +378,8 @@ def deleteSoftwareMission():
     if p_id == "Undefined":
         return "Unable to find program on server."
     print "[DELETEMISSION]: Found ID: %s"%(p_id)
+
+    deleteSoftwareviaID(p_id,ip = ip,logged_in = True,bf = False,clearlogs = True)
     # use l-format like https://legacy.hackerexperience.com/internet?view=software&cmd=del&id=8726969
     
 
