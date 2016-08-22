@@ -68,7 +68,7 @@ This is the login method for logging into an ip.  It is used by many of the func
 ### logout()
 To prevent errors while "surfing" the web, use the logout function to safely transition from one ip to the other.
 
-### deleteSoftwareviaID(ID,ip = "None",logged_in = False,bf = True,clearlogs = True) [WIP]
+### deleteSoftwareviaID(ID,ip = "None",logged_in = False,bf = True,clearlogs = True)
 This function allows you to delte a software on an ip rather than download. The parameters are the same as downloadviaID(read the meaning of the parameters there).
 
 ### def deleteSoftwareMission() [WIP]
