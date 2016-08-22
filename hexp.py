@@ -132,10 +132,27 @@ def downloadviaID(ID,ip = "None",bf = True,loginip = True,clearlogs = True):
             c1[2] = int(c1[2][:-1])
             timeleft = (3600 * c1[0] )+( 60 * c1[1] )+ c1[2]
             print "[DOWNLOAD]:%s  @ %s(%s sec left)"%(c,pcent,timeleft)
-            time.sleep(int(timeleft/2))
+            time.sleep(max(0.5,int(timeleft/2)))
     except:
         print "[DOWNLOAD]: Failed Download."
-
+def clearinternetlogs():
+    try:
+        print "[CIL]: Cleaning internet logs...
+        driver.get(base_link+"internet?view=logs")
+        c = driver.find_element_by_class_name("logarea")
+        data = c.text
+        c.clear()
+        driver.find_element_by_xpath("//form[input/@type='submit']").submit()
+        xm = open("ScrappedLoggs.txt","a")
+        xm.write("\n"+data)
+        xm.close()
+        while "id" in driver.current_url:
+            print "[CIL]: WAITING"
+            time.sleep(2)
+        
+    except:
+        print "[CIL]: Couldnt find the logs."
+        
 def getDollarsBalance():
     try:
         return int(driver.find_element_by_class_name("finance-info").text[1:])
@@ -157,6 +174,9 @@ def login(ip = "None",clearlogs = True):
         print "[LOGINIP]: LOGIN ATTEMPTED."
         if clearlogs:
             try:
+                # Pack function for other purposes.
+                clearinternetlogs()
+                '''
                 driver.get(base_link+"internet?view=logs")
                 c = driver.find_element_by_class_name("logarea")
                 data = c.text
@@ -168,6 +188,7 @@ def login(ip = "None",clearlogs = True):
                 while "id" in driver.current_url:
                     print "[LOGINIP]: WAITING"
                     time.sleep(2)
+                '''
             except:
                 print "Error, this ip clearly doesnt have logs."
         driver.get(base_link + "internet?view=software")
@@ -188,14 +209,51 @@ def validIP(ip):
             return False
     if len(c) != 4:
         return False
+    return True
 def deleteSoftwareviaID(ID,ip = "None",logged_in = False,bf = True,clearlogs = True):
+    if not validIP(ip):
+        print "[DELETESOFTWARE]: This isnt a valid ip."
+        return None
     
     if bf and not logged_in:
         print "[DELETESOFTWARE]: Clearly you have not been to this ip before."
         discover_ip(ip)
-        deleteSoftwareviaID(ip,logged_in = True,)
+        deleteSoftwareviaID(ip,logged_in = True,bf = False,clearlogs = False)
 
-    
+    else:
+        if not logged_in:
+            login(ip = ip)
+        print "[DELETESOFTWARE]Searching for object %s"%(ID)
+        try:
+            c = driver.find_element_by_id(ID).text
+        except:
+            print "[DELTETSOFTWARE]: not found"
+            return None
+        
+        print "[DELETESOFTWARE]: Starting download on %s"%(c)
+        driver.get(base_link+"internet?view=software&cmd=del&id=%s"%(ID))
+        print "[DELETESOFTWARE]: Switching to passive monitoring"
+        while "del" in driver.current_url:
+            c1 = driver.find_element_by_class_name("elapsed").text.split(":")
+            pcent = driver.find_element_by_class_name("percent").text
+            c = c1
+            c1[0] = int(c1[0][:-1])
+            c1[1] = int(c1[1][:-1])
+            c1[2] = int(c1[2][:-1])
+            timeleft = (3600 * c1[0] )+( 60 * c1[1] )+ c1[2]
+            print "[DELETESOFTWARE]:%s  @ %s(%s sec left)"%(c,pcent,timeleft)
+            # New implementation max(0.5,int(timeleft/2)) to prevent asymptotic printing where timeleft = 0.5 and sleep < 0.5 sec
+            time.sleep(max(0.5,int(timeleft/2)))
+        print "[DELETESOFTWARE]: Testing deletion of software."
+        try:
+            c = driver.find_element_by_id(ID).text
+            print "new_software: ",c
+            print "[DELETESOFTWARE]: We are still picking up scent of the software, running delete method again."
+            deleteSoftwareviaID(ID,ip = ip,logged_in = True,bf = False,clearlogs = True)
+        except:
+            print "[DELETESOFTWARE]: Software not found on server anymore."
+
+            
 def deleteSoftwareMission():
     article_data =driver.find_element_by_class_name("article-post").text
     article_data = article_data.split("and remove the file ")[1]
