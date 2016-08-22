@@ -152,10 +152,34 @@ def clearinternetlogs():
         
     except:
         print "[CIL]: Couldnt find the logs."
-        
+def getbtcrate():
+    return int(driver.find_element_by_xpath(".//*[@id='btc-total']").text)
+def convertMoneytoBTC():
+    try:
+        print "[CMTB]: Opening Market ..."
+        logout()
+        driver.get(base_link+ "internet?ip=214.87.50.225")
+        driver.find_element_by_id("btc-login").click()
+        clearlog()
+    except:
+        print "[CMTB]: Already logged in."
+    driver.get(base_link+ "internet?ip=214.87.50.225")
+    mymoney = getDollarsBalance()
+    driver.find_element_by_class_name("quick-actions").find_element_by_id("btc-buy").click()
+    print "[CMTB]: Opened Buy Box."
+    c = getbtcrate()
+    bitcoins = int(10 * (mymoney / float(c)))
+    bitcoins /= 10.0
+    driver.find_element_by_id("btc-amount").clear()
+    print "[CMTB]: Buying %s BTC -> %s Dollars"%(bitcoins,bitcoins * c)
+    driver.find_element_by_id("btc-amount").send_keys(str(bitcoins))
+    driver.find_element_by_id("btc-submit").click()
+    clearlog()
 def getDollarsBalance():
     try:
-        return int(driver.find_element_by_class_name("finance-info").text[1:])
+        c = driver.find_element_by_class_name("finance-info").text[1:]
+        c = c.replace(",","")
+        return int(c)
     except:
         print "[MONEYIND]: Unable to read your balance."
 def login(ip = "None",clearlogs = True):
@@ -356,9 +380,9 @@ def downloadobject(obj,log_in = True,ip = "None"):
 def deleteSoftwareMission():
     article_data =driver.find_element_by_class_name("article-post").text
     article_data = article_data.split("file")[1]
-    program = aritcle_data.split("recieve")
+    program = article_data.split("recieve")[0]
     program = program.split(".")
-    program = program[1]+program[0]
+    program = program[0]+"."+program[1]
     
     program.strip(" ")
     program.strip(".")
