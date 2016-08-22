@@ -355,13 +355,16 @@ def downloadobject(obj,log_in = True,ip = "None"):
         
 def deleteSoftwareMission():
     article_data =driver.find_element_by_class_name("article-post").text
-    article_data = article_data.split("and remove the file ")[1]
-    program = article_data.split("I am")[0]
+    article_data = article_data.split("file")[1]
+    program = aritcle_data.split("recieve")
+    program = program.split(".")
+    program = program[1]+program[0]
+    
     program.strip(" ")
     program.strip(".")
     print "[DELETEMISSION]: Program Name: %s"%(program)
     
-    ip = article_data.split("Ping them at ")[1]
+    ip = article_data.split("at")[1]
     ip = ip.split("We")[0]
     ip = ip.strip(" ")
     ip = ip.strip(".")
