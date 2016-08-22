@@ -1,0 +1,8 @@
+
+2016-08-22 17:14 - [110.225.205.119] logged in as root
+2016-08-22 17:14 - [145.31.27.20] logged in as root
+2016-08-22 17:10 - [149.67.190.100] logged in as root
+2016-08-22 17:08 - [73.48.50.141] installed file Basic FTP Exploit.exp (1.0) at localhost
+2016-08-22 17:08 - [73.48.50.141] installed file Basic Hidder.hdr (1.0) at localhost
+2016-08-22 17:08 - [73.48.50.141] installed file Basic Firewall.fwl (1.0) at localhost
+2016-08-22 17:08 - [73.48.50.141] installed file Basic Hasher.hash (1.0) at localhost

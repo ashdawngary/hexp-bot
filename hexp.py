@@ -137,7 +137,7 @@ def downloadviaID(ID,ip = "None",bf = True,loginip = True,clearlogs = True):
         print "[DOWNLOAD]: Failed Download."
 def clearinternetlogs():
     try:
-        print "[CIL]: Cleaning internet logs...
+        print "[CIL]: Cleaning internet logs..."
         driver.get(base_link+"internet?view=logs")
         c = driver.find_element_by_class_name("logarea")
         data = c.text
@@ -200,10 +200,11 @@ def validIP(ip):
     c = ip.split(".")
     for i in c:
         try:
-            int(c)
-            if 0 < int(c) < 256:
+            int(i)
+            if 0 < int(i) and int(i) < 256:
                 pass
             else:
+                
                 return False
         except:
             return False
