@@ -1,4 +1,4 @@
-# hexp-bot by Neel Bhalla (c) 2016
+# hexp-bot
 ## This is a selenium webdriver version of hexpbot using 46.0 firefox
 ## Installation (I use Python 2.7.12) which can be downloaded of python.org
 ## DO NOT USE 3.X as it is different syntax.
@@ -51,4 +51,25 @@ This function clears YOUR log
 Once you are on the "account page" in the bank, it scrapps the money value
 note: do not try to do this on your account, it will just get it hacked as once you log in, your # will be on the the bank ip logs.
 
-###
+### hackip(ip = "None")
+This function runs the cracker on an ip. It will wait until you reach the login page.
+If you cracker is incompetent with the other's hasher, it will still run, but the login will fail.
+It takes on average 30sec(No more that 30s), but the printout doesnt give the time atm so just be patient with it.
+
+### downloadviaID(ID,ip = "None",bf = True,loginip = True,clearlogs = True)
+This function takes the program ID(found using inspect element or getSoftwares() function) and the ip.  bf means whether or not the password is in the hacked database. loginip is if you need to logout of another ip, clearlogs is for if you want to clear the logs upon arrival to the site.  If you encounter a server such as download center which doesnt have logs, the program will not crash and will notify you that it failed to find the location of the logs.
+
+### getDollarsBalance()
+This is the safe way to get YOUR money value off of hexp. It uses the finances object in the website in order to do this rather than the bank ip - login method.
+
+### login(ip = "None",clearlogs = True)
+This is the login method for logging into an ip.  It is used by many of the functions such as discover_ip. Clearlogs toggles wether or not you want the logs to be cleared upon arrival.
+
+### logout()
+To prevent errors while "surfing" the web, use the logout function to safely transition from one ip to the other.
+
+### deleteSoftwareviaID(ID,ip = "None",logged_in = False,bf = True,clearlogs = True) [WIP]
+This function allows you to delte a software on an ip rather than download. The parameters are the same as downloadviaID(read the meaning of the parameters there).
+
+### def deleteSoftwareMission() [WIP]
+This function can execute a mission based on the mission-page.  Run it on the mission page, it will extract all the data it needs from the garbage text they give you.
