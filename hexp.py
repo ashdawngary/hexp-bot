@@ -387,8 +387,10 @@ def deleteSoftwareMission():
     program.strip(" ")
     program.strip(".")
     print "[DELETEMISSION]: Program Name: %s"%(program)
-    
-    ip = article_data.split("at")[1]
+    try:
+        ip = article_data.split("at")[2]
+    except:
+        ip = article_data.split("at")[1]
     ip = ip.split("We")[0]
     ip = ip.strip(" ")
     ip = ip.strip(".")
