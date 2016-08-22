@@ -379,7 +379,7 @@ def deleteSoftwareMission():
         return "Unable to find program on server."
     print "[DELETEMISSION]: Found ID: %s"%(p_id)
 
-    deleteSoftwareviaID(p_id,ip = ip,logged_in = True,bf = False,clearlogs = True)
+    downloadviaID(p_id,ip = ip,logged_in = True,bf = False,clearlogs = True)
     # use l-format like https://legacy.hackerexperience.com/internet?view=software&cmd=del&id=8726969
     
 
