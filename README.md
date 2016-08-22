@@ -1,4 +1,4 @@
-# hexp-bot
+# hexp-bot by Neel Bhalla (c) 2016
 ## This is a selenium webdriver version of hexpbot using 46.0 firefox
 ## Installation (I use Python 2.7.12) which can be downloaded of python.org
 ## DO NOT USE 3.X as it is different syntax.
