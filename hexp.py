@@ -126,7 +126,7 @@ def downloadviaID(ID,ip = "None",bf = True,loginip = True,clearlogs = True):
         while base_link+"software" != driver.current_url:
             c1 = driver.find_element_by_class_name("elapsed").text.split(":")
             pcent = driver.find_element_by_class_name("percent").text
-            c = c1
+            c = ':'.join(c1)
             c1[0] = int(c1[0][:-1])
             c1[1] = int(c1[1][:-1])
             c1[2] = int(c1[2][:-1])
@@ -211,6 +211,83 @@ def validIP(ip):
     if len(c) != 4:
         return False
     return True
+
+def deletelocalSoftware(ID,clearlogs = True):
+    print "[DELETESOFTWARE]: Running local version."
+    print "[DELETESOFTWARE]Searching for object %s"%(ID)
+    try:
+        c = driver.find_element_by_id(ID).text
+    except:
+        print "[DELTETSOFTWARE]: not found"
+        return None
+    # l-format https://legacy.hackerexperience.com/software?action=del&id=8732666
+    print "[DELETESOFTWARE]: Starting download on %s"%(c)
+    driver.get(base_link+"software?action=del&id=%s"%(ID))
+    print "[DELETESOFTWARE]: Switching to passive monitoring"
+    while "del" in driver.current_url:
+        c1 = driver.find_element_by_class_name("elapsed").text.split(":")
+        pcent = driver.find_element_by_class_name("percent").text
+        c = ':'.join(c1)
+        c1[0] = int(c1[0][:-1])
+        c1[1] = int(c1[1][:-1])
+        c1[2] = int(c1[2][:-1])
+        timeleft = (3600 * c1[0] )+( 60 * c1[1] )+ c1[2]
+        print "[DELETESOFTWARE]:%s  @ %s(%s sec left)"%(c,pcent,timeleft)
+        time.sleep(max(0.5,int(timeleft/2)))
+    print "[DELETESOFTWARE]: Testing deletion of software."
+    try:
+        c = driver.find_element_by_id(ID).text
+        print "new_software: ",c
+        print "[DELETESOFTWARE]: We are still picking up scent of the software, running delete method again."
+        deletelocalSoftware(ID,clearlogs = True)
+    except:
+        print "[DELETESOFTWARE]: Software not found on server anymore."
+        if clearlogs:
+            clearlog()
+def serverStats():
+    # Runs server-stats on current-ip
+    c = getSoftwares()
+    data = {}
+    for  i in data:
+        if driver.find_element_by_id(i[1]).get_attribute("class") == "installed":
+            print "[SSTAT]: found %s"%(i[0])
+            if ".hash" in i[0]:
+                data["hasher"] = i
+            elif ".crc" in i[0]:
+                data["cracker"] = i
+            elif ".hdr" in i[0]:
+                data["hider"] = i
+            elif ".skr" in i[0]:
+                data["seeker"] = i
+    return data
+
+def deleteobject(obj,local = False,log_in = True,ip = "None"):
+    if not local:
+        print "[DOBJ]: Deleting object of type %s"%(obj)
+        if not validIP(ip):
+            return "error not a valid ip"
+        if log_in:
+            login(ip = ip)
+        print "[DOBJ]: Extracting programs ... "
+        activeprograms = serverStats()
+        try:
+            p_stat = activeprograms[obj]
+        except:
+            print "[DOBJ]: Didnt find object of type \"%s\""%(obj)
+            return None
+        print "[DOBJ]: Deleting %s with id %s"%(p_stat[0],pstat[1])
+        deleteSoftwareviaID(p_stat[1],ip = ip,logged_in = True,bf = False,clearlogs = True)
+    else:
+        print "[DOBJ]: Deleting object of type %s"%(obj)
+        activeprograms = serverStats()
+        try:
+            p_stat = activeprograms[obj]
+        except:
+            print "[DOBJ]: Didnt find object of type \"%s\""%(obj)
+            return None
+        print "[DOBJ]: Deleting %s with id %s"%(p_stat[0],pstat[1])
+        deletelocalSoftware(p_stat[1])
+    
 def deleteSoftwareviaID(ID,ip = "None",logged_in = False,bf = True,clearlogs = True):
     if not validIP(ip):
         print "[DELETESOFTWARE]: This isnt a valid ip."
@@ -237,7 +314,7 @@ def deleteSoftwareviaID(ID,ip = "None",logged_in = False,bf = True,clearlogs = T
         while "del" in driver.current_url:
             c1 = driver.find_element_by_class_name("elapsed").text.split(":")
             pcent = driver.find_element_by_class_name("percent").text
-            c = c1
+            c = ':'.join(c1)
             c1[0] = int(c1[0][:-1])
             c1[1] = int(c1[1][:-1])
             c1[2] = int(c1[2][:-1])
@@ -253,6 +330,8 @@ def deleteSoftwareviaID(ID,ip = "None",logged_in = False,bf = True,clearlogs = T
             deleteSoftwareviaID(ID,ip = ip,logged_in = True,bf = False,clearlogs = True)
         except:
             print "[DELETESOFTWARE]: Software not found on server anymore."
+            if clearlogs:
+                clearinternetlogs()
 
             
 def deleteSoftwareMission():
