@@ -45,7 +45,7 @@ def getSoftwares():
             if len(id) == 7 and softwareid(id):
                 p.append([i.text,id])
         except:
-            print "faulty element, %s"%(id)
+            print "[GSOFT]faulty element, %s"%(id)
     return p
 def discover_ip(ip):
     logout()
@@ -382,11 +382,12 @@ def deleteSoftwareMission():
     article_data = article_data.split("file")[1]
     program = article_data.split("recieve")[0]
     program = program.split(".")
-    program = program[0]+"."+program[1]
+    program = "."+program[1]
     
     program.strip(" ")
     program.strip(".")
-    print "[DELETEMISSION]: Program Name: %s"%(program)
+    # New update to prevent whitespace corruption
+    print "[DELETEMISSION]: Program detection method: %s"%(program)
     try:
         ip = article_data.split("at")[2]
     except:
@@ -408,11 +409,19 @@ def deleteSoftwareMission():
         return "Unable to find program on server."
     print "[DELETEMISSION]: Found ID: %s"%(p_id)
 
-    downloadviaID(p_id,ip = ip,logged_in = True,bf = False,clearlogs = True)
+    deleteviaID(p_id,ip = ip,logged_in = True,bf = False,clearlogs = True)
     # use l-format like https://legacy.hackerexperience.com/internet?view=software&cmd=del&id=8726969
-    
-
-
+def getbankaccount():
+    print "[GBA]: saving current url..."
+    last_spot = driver.current_url
+    driver.get(base_link + "finances")
+    myacc = driver.find_element_by_xpath(".//*[@id='acc1']/div").text
+    myacc = myacc[myacc.index("#")+1:myacc.index("#") + 10]
+    iphoster = driver.find_element_by_xpath(".//*[@id='content']/div[3]/div/div/div/div[2]/div[1]/div[2]/div/div[1]/a[2]/span").click()
+    iphoster = driver.find_element_by_class_name("browser-bar").get_attribute("value")
+    print "[GBA]: restoring url..."
+    driver.get(last_spot)
+    return ,iphoster
 
 
     
