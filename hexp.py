@@ -396,7 +396,9 @@ def deleteSoftwareMission():
     ip = ip.strip(" ")
     ip = ip.strip(".")
     print "[DELETEMISSION]: IP to delete from: %s"%(ip)
-
+    if not validIP(ip):
+        print "We couldnt find the IP Please enter it now"
+        ip = raw_input("IP: ")
     ## Data parsing Done.
     
     discover_ip(ip)
@@ -409,7 +411,16 @@ def deleteSoftwareMission():
         return "Unable to find program on server."
     print "[DELETEMISSION]: Found ID: %s"%(p_id)
 
-    deleteviaID(p_id,ip = ip,logged_in = True,bf = False,clearlogs = True)
+    deleteSoftwareviaID(p_id,ip = ip,logged_in = True,bf = False,clearlogs = True)
+    print "[DELETEMISSION]: Claiming Prize"
+    driver.get(base_link+"missions")
+    cmb = driver.find_element_by_xpath(".//*[@id='content']/div[3]/div/div/div/div[2]/div/div[1]/span[1]")
+    cmb.click()
+    try:
+        finish = driver.find_element_by_id("modal-submit").submit()
+    except:
+        time.sleep(0.5)
+        driver.find_element_by_id("modal-submit").click()
     # use l-format like https://legacy.hackerexperience.com/internet?view=software&cmd=del&id=8726969
 def getbankaccount():
     print "[GBA]: saving current url..."
@@ -421,7 +432,7 @@ def getbankaccount():
     iphoster = driver.find_element_by_class_name("browser-bar").get_attribute("value")
     print "[GBA]: restoring url..."
     driver.get(last_spot)
-    return ,iphoster
+    return myacc,iphoster
 
 
     
