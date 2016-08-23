@@ -508,8 +508,16 @@ def deleteSoftwareMission():
     if p_id == "Undefined":
         return "Unable to find program on server."
     print "[DELETEMISSION]: Found ID: %s"%(p_id)
-
-    deleteSoftwareviaID(p_id,ip = ip,logged_in = True,bf = False,clearlogs = True)
+    try:
+        deleteSoftwareviaID(p_id,ip = ip,logged_in = True,bf = False,clearlogs = True)
+    except:
+        try:
+            driver.find_element_by_id(ID).text
+            deleteSoftwareviaID(p_id,ip = ip,logged_in = True,bf = False,clearlogs = True)
+        except:
+            print "[DELTEMISSION]: Ran into error with crash, but clearly deleted"
+            clearinternetlogs()
+            
     print "[DELETEMISSION]: Claiming Prize"
     driver.get(base_link+"missions")
     cmb = driver.find_element_by_xpath(".//*[@id='content']/div[3]/div/div/div/div[2]/div/div[1]/span[1]")
