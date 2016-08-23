@@ -126,6 +126,8 @@ def downloadviaID(ID,ip = "None",bf = True,loginip = True,clearlogs = True):
         while base_link+"software" != driver.current_url:
             c1 = driver.find_element_by_class_name("elapsed").text.split(":")
             pcent = driver.find_element_by_class_name("percent").text
+            if c1 == "Finished":
+                c1 = ["0h","0m","0s"]
             c = ':'.join(c1)
             c1[0] = int(c1[0][:-1])
             c1[1] = int(c1[1][:-1])
@@ -251,6 +253,8 @@ def deletelocalSoftware(ID,clearlogs = True):
     while "del" in driver.current_url:
         c1 = driver.find_element_by_class_name("elapsed").text.split(":")
         pcent = driver.find_element_by_class_name("percent").text
+        if c1 == "Finished":
+            c1 = ["0h","0m","0s"]
         c = ':'.join(c1)
         c1[0] = int(c1[0][:-1])
         c1[1] = int(c1[1][:-1])
@@ -341,6 +345,8 @@ def deleteSoftwareviaID(ID,ip = "None",logged_in = False,bf = True,clearlogs = T
         while "del" in driver.current_url:
             c1 = driver.find_element_by_class_name("elapsed").text.split(":")
             pcent = driver.find_element_by_class_name("percent").text
+            if c1 == "Finished":
+                c1 = ["0h","0m","0s"]
             c = ':'.join(c1)
             c1[0] = int(c1[0][:-1])
             c1[1] = int(c1[1][:-1])
@@ -375,8 +381,114 @@ def downloadobject(obj,log_in = True,ip = "None"):
         return None
     print "[DOBJ]: Downloading %s with id %s"%(p_stat[0],p_stat[1])
     downloadviaID(p_stat[1],ip = ip,loginip = True,bf = False,clearlogs = True)
+def extractBankcheckData():
+    import string
 
-        
+    c = driver.find_element_by_class_name("article-post").text
+    banknum = c[c.index("#")+1:c.index("#")+10]
+    sidx = c.index("#") + 11
+    eidx = c.index("#") + 10
+    pcount = 0
+    numbers = False
+    lmoney = False
+    cidx = sidx
+    while pcount != 4:
+        if not numbers and c[cidx] in string.digits and not lmoney:
+            numbers = True
+            sidx = cidx
+        elif not numbers and c[cidx] in string.digits and  lmoney:
+            pass
+        elif numbers and c[cidx] == "." and not lmoney:
+            pcount += 1
+        elif not numbers and c[cidx] == "$":
+            lmoney  = True
+        elif c[cidx] == ",":
+            pass
+        else:
+            lmoney  = False
+
+
+        cidx += 1
+    eidx = cidx
+    rest = c[sidx:eidx].split(".")
+    constr = ""
+    rest = rest[:-1] 
+    for i in rest:
+        constr+= str(int(i))+"."
+    constr = constr[:-1]
+    return banknum,constr
+
+def checkbankaccstatusmission():
+    banknum,bankip = extractBankcheckData()
+    
+    print "[MILVL2]: Mission Data"
+    print "[MILVL2]: b-number: %s"%(banknum)
+    print "[MILVL2]: bank-ipa: %s"%(bankip)
+    mynum,myip = getbankaccount()
+    print "[MILVL2]: m-number: %s"%(mynum)
+    print "[MILVL2]: mbank-ip: %s"%(myip)
+    dinacc = tfmoney(banknum,bankip,mynum,myip)
+
+    driver.find_element_by_xpath(".//*[@id='amount-input']").send_keys(str(dinacc))
+    cm = driver.find_element_by_xpath(".//*[@id='content']/div[3]/div/div/div/div[2]/div/div[1]/span[1]").click()
+    buy = driver.find_element_by_xpath(".//*[@id='modal-submit']")
+    try:
+        buy.submit()
+    except:
+        buy.click()
+    print "[MILVL2]: Complete! Running converter now."
+    convertMoneytoBTC()
+def tfmoney(a1,ip1,a2,ip2,reload = True,returnquantity = True):
+    if reload:
+        logout()
+        internet(ip = ip1)
+        # l-method https://legacy.hackerexperience.com/internet?action=hack&type=bank
+        driver.get(base_link+"internet?action=hack&type=bank")
+        bnumbox = driver.find_element_by_xpath(".//*[@id='content']/div[3]/div/div[1]/div[2]/div[2]/div/div[2]/form/div[1]/div/input")
+        bnumbox.clear()
+        bnumbox.send_keys(a1)
+        hackbutton = driver.find_element_by_xpath(".//*[@id='content']/div[3]/div/div[1]/div[2]/div[2]/div/div[2]/form/div[2]/button")
+        hackbutton.submit()
+        while not "login" in driver.current_url:
+            #Account number .//*[@id='content']/div[3]/div/div[1]/div[2]/div[2]/div/div[2]/form/div[1]/div/input
+            c1 = driver.find_element_by_class_name("elapsed").text.split(":")
+            pcent = driver.find_element_by_class_name("percent").text
+            if c1 == "Finished":
+                c1 = ["0h","0m","0s"]
+            try:
+                c = ':'.join(c1)
+                c1[0] = int(c1[0][:-1])
+                c1[1] = int(c1[1][:-1])
+                c1[2] = int(c1[2][:-1])
+                timeleft = (3600 * c1[0] )+( 60 * c1[1] )+ c1[2]
+            except:
+                c = "unable to load"
+            
+            print "[TRANSFERMONEY]:%s  @ %s(%s sec left)"%(c,pcent,timeleft)
+            # New implementation max(0.5,int(timeleft/2)) to prevent asymptotic printing where timeleft = 0.5 and sleep < 0.5 sec
+            time.sleep(max(0.5,int(timeleft/2)))
+
+            
+        del hackbutton, bnumbox
+        print "[TRANSFERMONEY]: Going to Account login button."
+        accloginbutton = driver.find_element_by_xpath(".//*[@id='loginform']/div[3]/span[3]/input")
+
+        accloginbutton.submit()
+    if returnquantity:
+        tr =  viewbankaccount()
+    else:
+        tr = -1
+    print "[TFM]: At login state."
+    try:
+        driver.find_element_by_xpath(".//*[@id='content']/div[3]/div/div[2]/div[2]/div/div[2]/div[1]/div/div[2]/form/div[1]/div[2]/input").send_keys(a2) # fill in acc #
+        driver.find_element_by_xpath(".//*[@id='content']/div[3]/div/div[2]/div[2]/div/div[2]/div[1]/div/div[2]/form/div[1]/div[4]/input").send_keys(ip2)# fill in bip #
+        driver.find_element_by_xpath(".//*[@id='content']/div[3]/div/div[2]/div[2]/div/div[2]/div[1]/div/div[2]/form/div[2]/button").submit()            # submit the form
+    except:
+        print "[TFM]: error this account was already hacked please transfer it manually if required."
+        return a1,ip1,a2,ip2
+    return tr
+    
+    
 def deleteSoftwareMission():
     article_data =driver.find_element_by_class_name("article-post").text
     article_data = article_data.split("file")[1]
