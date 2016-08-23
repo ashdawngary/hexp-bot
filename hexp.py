@@ -157,6 +157,8 @@ def clearinternetlogs():
 def getbtcrate():
     return int(driver.find_element_by_xpath(".//*[@id='btc-total']").text)
 def convertMoneytoBTC():
+    logout()
+    driver.get(base_link+"software")
     try:
         print "[CMTB]: Opening Market ..."
         logout()
@@ -428,8 +430,11 @@ def checkbankaccstatusmission():
     print "[MILVL2]: m-number: %s"%(mynum)
     print "[MILVL2]: mbank-ip: %s"%(myip)
     dinacc = tfmoney(banknum,bankip,mynum,myip)
+    print "Submitting %s into the box"%(dinacc)
     driver.get(base_link+"missions")
-    driver.find_element_by_xpath(".//*[@id='amount-input']").send_keys(str(dinacc))
+    inp = driver.find_element_by_xpath(".//*[@id='amount-input']")
+    inp.clear()
+    inp.send_keys(str(dinacc))
     time.sleep(1)
     cm = driver.find_element_by_xpath(".//*[@id='content']/div[3]/div/div/div/div[2]/div/div[1]/span[1]").click()
     time.sleep(0.2)
@@ -477,7 +482,7 @@ def tfmoney(a1,ip1,a2,ip2,reload = True,returnquantity = True):
         driver.find_element_by_xpath(".//*[@id='content']/div[3]/div/div[2]/div[2]/div/div[2]/div[1]/div/div[2]/form/div[1]/div[4]/input").send_keys(ip2)# fill in bip #
         #print "[TFM]: Entering %s under to."%(a2)
         driver.find_element_by_xpath(".//*[@id='content']/div[3]/div/div[2]/div[2]/div/div[2]/div[1]/div/div[2]/form/div[2]/button").submit()            # submit the form
-        time.sleep(5)
+        #time.sleep(5)
     except:
         print "[TFM]: error this account was already hacked please transfer it manually if required."
         return a1,ip1,a2,ip2
