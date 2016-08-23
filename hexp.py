@@ -428,9 +428,11 @@ def checkbankaccstatusmission():
     print "[MILVL2]: m-number: %s"%(mynum)
     print "[MILVL2]: mbank-ip: %s"%(myip)
     dinacc = tfmoney(banknum,bankip,mynum,myip)
-
+    driver.get(base_link+"missions")
     driver.find_element_by_xpath(".//*[@id='amount-input']").send_keys(str(dinacc))
+    time.sleep(1)
     cm = driver.find_element_by_xpath(".//*[@id='content']/div[3]/div/div/div/div[2]/div/div[1]/span[1]").click()
+    time.sleep(0.2)
     buy = driver.find_element_by_xpath(".//*[@id='modal-submit']")
     try:
         buy.submit()
@@ -466,8 +468,11 @@ def tfmoney(a1,ip1,a2,ip2,reload = True,returnquantity = True):
         tr = -1
     print "[TFM]: At login state."
     try:
+        #print "[TFM]: Entering %s under to."%(a2)
         driver.find_element_by_xpath(".//*[@id='content']/div[3]/div/div[2]/div[2]/div/div[2]/div[1]/div/div[2]/form/div[1]/div[2]/input").send_keys(a2) # fill in acc #
+        #print "[TFM]: Entering %s under to."%(a2)
         driver.find_element_by_xpath(".//*[@id='content']/div[3]/div/div[2]/div[2]/div/div[2]/div[1]/div/div[2]/form/div[1]/div[4]/input").send_keys(ip2)# fill in bip #
+        #print "[TFM]: Entering %s under to."%(a2)
         driver.find_element_by_xpath(".//*[@id='content']/div[3]/div/div[2]/div[2]/div/div[2]/div[1]/div/div[2]/form/div[2]/button").submit()            # submit the form
     except:
         print "[TFM]: error this account was already hacked please transfer it manually if required."
