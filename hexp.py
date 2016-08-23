@@ -646,7 +646,64 @@ def getbankaccount():
     print "[GBA]: restoring url..."
     driver.get(last_spot)
     return myacc,iphoster
-
-
-    
-
+def getMissions():
+    #Returns first do-able mission.
+    driver.get(base_link+"missions")
+    i = 1
+    good = True
+    while good:
+        try:
+            c =  driver.find_element_by_xpath(".//*[@id='content']/div[3]/div/div/div/div[2]/div[1]/div[2]/div[2]/table/tbody/tr["+str(i)+"]/td[2]/a")
+            title,link = c.text,c.get_attribute("href")
+            if "Transfer" in title:
+                return title,link
+            elif "Check bank" in title:
+                return title,link
+            elif "Delete" in title:
+                return title,link
+            else:
+                # trash missions like Destroying servers and stealing software
+                print title,link
+                pass
+            
+        except:
+            good = False
+        i += 1
+    return "none",False
+def abortmission():
+    print "[AMI]: Aborting the mission"
+    driver.get(base_link+"missions")
+    try:
+        driver.find_element_by_xpath(".//*[@id='content']/div[3]/div/div/div/div[2]/div/div[1]/span[1]").click()
+        time.sleep(0.3)
+        driver.find_element_by_xpath(".//*[@id='modal-form']/div[2]/input[3]").click()
+    except:
+        print "[AMI]: Nothing to abort"
+    return None
+def mission_rush():
+    title,link = getMissions()
+    while title != "none":
+        print "[MRUSH]: doing mission %s "%(title)
+        driver.get(link)
+        driver.find_element_by_xpath(".//*[@id='content']/div[3]/div/div/div/div[2]/div/div[1]/span[1]").click()
+        time.sleep(0.3)
+        driver.find_element_by_xpath(".//*[@id='modal-form']/div[2]/input[3]").click()
+        time.sleep(0.3)
+        if "Transfer" in title:
+            try:
+                transfermoneymission()
+            except:
+                abortmission()
+        elif "Check bank" in title:
+            try:
+                checkbankaccstatusmission()
+            except:
+                abortmission()
+        elif "Delete" in title:
+            try:
+                t = deleteSoftwareMission()
+                if t == "Unable to find program on server.":
+                    abortmission()
+                    
+            except:
+                abortmission()
