@@ -171,7 +171,7 @@ def convertMoneytoBTC():
         driver.get(base_link+ "internet?ip=214.87.50.225")
         mymoney = getDollarsBalance()
         driver.find_element_by_class_name("quick-actions").find_element_by_id("btc-buy").click()
-        print "[CMTB]: Opened Buy Box."
+        #print "[CMTB]: Opened Buy Box."
         c = getbtcrate()
         bitcoins = int(10 * (mymoney / float(c)))
         bitcoins /= 10.0
@@ -186,12 +186,9 @@ def convertMoneytoBTC():
             except:
                 driver.find_element_by_id("btc-submit").click()
     except:
-        print "[CMTB]: cmtb crashed -> running diagnostics."
+        #print "[CMTB]: cmtb crashed -> running diagnostics."
         moneyleft = getDollarsBalance()
-        if moneyleft > c:
-            print "[CMTB]: Running restart"
-        else:
-            print "[CMTB]: Autoquit- duet to failure to buy"
+        convertMoneytoBTC()
     clearlog()
 def getDollarsBalance():
     try:
@@ -433,6 +430,53 @@ def extractBankcheckData():
         constr+= str(int(i))+"."
     constr = constr[:-1]
     return banknum,constr
+def transfermoneymission():
+    article_Data = driver.find_element_by_class_name("article-post").text
+    article_Data = article_Data[article_Data.index("#") - 2 : ]
+    new_object = ""
+    objects = []
+    import string
+    p = string.ascii_uppercase + string.ascii_lowercase
+    dj = string.digits
+    for i in article_Data:
+        if i in p and len(new_object) > 0:
+            print "End of new number -> %s"%(new_object)
+            objects.append(new_object)
+            new_object = ""
+        elif i in dj:
+            new_object += i
+        elif i in [".",","] and len(new_object) > 1:
+            new_object += i
+        else:
+            pass
+    objects[0]= objects[0].strip(".")
+    objects[0]= objects[0].strip(" ")
+    objects[0]= objects[0].strip(".")
+    objects[1]= objects[1].strip(".")
+    objects[1]= objects[1].strip(" ")
+    objects[1]= objects[1].strip(".")
+    objects[3]= objects[3].strip(".")
+    objects[3]= objects[3].strip(" ")
+    objects[3]= objects[3].strip(".")
+    objects[4]= objects[4].strip(".")
+    objects[4]= objects[4].strip(" ")
+    objects[4]= objects[4].strip(".")
+    mynum,myip = getbankaccount()
+    print "[MILVL3]: p1num: %s"%(objects[0])
+    print "[MILVL3]: p1-ip: %s"%(objects[3])
+    print "[MILVL3]: p2num: %s"%(objects[1])
+    print "[MILVL3]: p2-ip: %s"%(objects[4])
+    print "[MILVL3]: mynum: %s"%(mynum)
+    print "[MILVL3]: my-ip: %s"%(myip)
+    tfmoney(objects[0],objects[3],objects[1],objects[4])
+    tfmoney(objects[1],objects[4],mynum,myip)
+    driver.get(base_link+"missions")
+    cm = driver.find_element_by_xpath(".//*[@id='content']/div[3]/div/div/div/div[2]/div/div[1]/span[1]").click()
+    time.sleep(0.2)
+    buy = driver.find_element_by_xpath(".//*[@id='modal-submit']")
+    buy.click()
+    print "[MILVL3]: 2x conv complete."
+    convertMoneytoBTC()
 
 def checkbankaccstatusmission():
     banknum,bankip = extractBankcheckData()
@@ -486,6 +530,7 @@ def tfmoney(a1,ip1,a2,ip2,reload = True,returnquantity = True):
         accloginbutton.submit()
     if returnquantity:
         tr =  viewbankaccount()
+
     else:
         tr = -1
     print "[TFM]: At login state."
@@ -494,6 +539,7 @@ def tfmoney(a1,ip1,a2,ip2,reload = True,returnquantity = True):
         if tr == None and returnquantity:
             print "[TFM]: Retrying bank reading option"
             tr = viewbankaccount()
+            tr = int(driver.find_element_by_id("money").get_attribute("value").replace(",","")[1:])
         #print "[TFM]: Entering %s under to."%(a2)
         driver.find_element_by_xpath(".//*[@id='content']/div[3]/div/div[2]/div[2]/div/div[2]/div[1]/div/div[2]/form/div[1]/div[2]/input").send_keys(a2) # fill in acc #
         #print "[TFM]: Entering %s under to."%(a2)
@@ -501,6 +547,7 @@ def tfmoney(a1,ip1,a2,ip2,reload = True,returnquantity = True):
         if tr == None and returnquantity:
             print "[TFM]: Retrying bank reading option"
             tr = viewbankaccount()
+            tr = int(driver.find_element_by_id("money").get_attribute("value").replace(",","")[1:])
         #print "[TFM]: Entering %s under to."%(a2)
         driver.find_element_by_xpath(".//*[@id='content']/div[3]/div/div[2]/div[2]/div/div[2]/div[1]/div/div[2]/form/div[2]/button").submit()            # submit the form
         #time.sleep(5)
