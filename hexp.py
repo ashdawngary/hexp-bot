@@ -451,22 +451,8 @@ def tfmoney(a1,ip1,a2,ip2,reload = True,returnquantity = True):
         hackbutton.submit()
         while not "login" in driver.current_url:
             #Account number .//*[@id='content']/div[3]/div/div[1]/div[2]/div[2]/div/div[2]/form/div[1]/div/input
-            c1 = driver.find_element_by_class_name("elapsed").text.split(":")
-            pcent = driver.find_element_by_class_name("percent").text
-            if c1 == "Finished":
-                c1 = ["0h","0m","0s"]
-            try:
-                c = ':'.join(c1)
-                c1[0] = int(c1[0][:-1])
-                c1[1] = int(c1[1][:-1])
-                c1[2] = int(c1[2][:-1])
-                timeleft = (3600 * c1[0] )+( 60 * c1[1] )+ c1[2]
-            except:
-                c = "unable to load"
             
-            print "[TRANSFERMONEY]:%s  @ %s(%s sec left)"%(c,pcent,timeleft)
-            # New implementation max(0.5,int(timeleft/2)) to prevent asymptotic printing where timeleft = 0.5 and sleep < 0.5 sec
-            time.sleep(max(0.5,int(timeleft/2)))
+            pass
 
             
         del hackbutton, bnumbox
@@ -499,7 +485,7 @@ def deleteSoftwareMission():
     program.strip(" ")
     program.strip(".")
     # New update to prevent whitespace corruption
-    print "[DELETEMISSION]: Program detection method: %s"%(program)
+    print "[DELETEMISSION]: Program detection method: %s"%(str(program))
     try:
         ip = article_data.split("at")[2]
     except:
