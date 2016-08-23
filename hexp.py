@@ -167,17 +167,31 @@ def convertMoneytoBTC():
         clearlog()
     except:
         print "[CMTB]: Already logged in."
-    driver.get(base_link+ "internet?ip=214.87.50.225")
-    mymoney = getDollarsBalance()
-    driver.find_element_by_class_name("quick-actions").find_element_by_id("btc-buy").click()
-    print "[CMTB]: Opened Buy Box."
-    c = getbtcrate()
-    bitcoins = int(10 * (mymoney / float(c)))
-    bitcoins /= 10.0
-    driver.find_element_by_id("btc-amount").clear()
-    print "[CMTB]: Buying %s BTC -> %s Dollars"%(bitcoins,bitcoins * c)
-    driver.find_element_by_id("btc-amount").send_keys(str(bitcoins))
-    driver.find_element_by_id("btc-submit").click()
+    try:
+        driver.get(base_link+ "internet?ip=214.87.50.225")
+        mymoney = getDollarsBalance()
+        driver.find_element_by_class_name("quick-actions").find_element_by_id("btc-buy").click()
+        print "[CMTB]: Opened Buy Box."
+        c = getbtcrate()
+        bitcoins = int(10 * (mymoney / float(c)))
+        bitcoins /= 10.0
+        driver.find_element_by_id("btc-amount").clear()
+        print "[CMTB]: Buying %s BTC -> %s Dollars"%(bitcoins,bitcoins * c)
+        driver.find_element_by_id("btc-amount").send_keys(str(bitcoins))
+        try:
+            driver.find_element_by_id("btc-submit").click()
+        except:
+            try:
+                driver.find_element_by_id("btc-submit").click()
+            except:
+                driver.find_element_by_id("btc-submit").click()
+    except:
+        print "[CMTB]: cmtb crashed -> running diagnostics."
+        moneyleft = getDollarsBalance()
+        if moneyleft > c:
+            print "[CMTB]: Running restart"
+        else:
+            print "[CMTB]: Autoquit- duet to failure to buy"
     clearlog()
 def getDollarsBalance():
     try:
@@ -476,10 +490,17 @@ def tfmoney(a1,ip1,a2,ip2,reload = True,returnquantity = True):
         tr = -1
     print "[TFM]: At login state."
     try:
+
+        if tr == None and returnquantity:
+            print "[TFM]: Retrying bank reading option"
+            tr = viewbankaccount()
         #print "[TFM]: Entering %s under to."%(a2)
         driver.find_element_by_xpath(".//*[@id='content']/div[3]/div/div[2]/div[2]/div/div[2]/div[1]/div/div[2]/form/div[1]/div[2]/input").send_keys(a2) # fill in acc #
         #print "[TFM]: Entering %s under to."%(a2)
         driver.find_element_by_xpath(".//*[@id='content']/div[3]/div/div[2]/div[2]/div/div[2]/div[1]/div/div[2]/form/div[1]/div[4]/input").send_keys(ip2)# fill in bip #
+        if tr == None and returnquantity:
+            print "[TFM]: Retrying bank reading option"
+            tr = viewbankaccount()
         #print "[TFM]: Entering %s under to."%(a2)
         driver.find_element_by_xpath(".//*[@id='content']/div[3]/div/div[2]/div[2]/div/div[2]/div[1]/div/div[2]/form/div[2]/button").submit()            # submit the form
         #time.sleep(5)
@@ -487,8 +508,16 @@ def tfmoney(a1,ip1,a2,ip2,reload = True,returnquantity = True):
         print "[TFM]: error this account was already hacked please transfer it manually if required."
         return a1,ip1,a2,ip2
     return tr
-    
-    
+def extrip(article_data):
+    c = article_data
+    c  = c.split(".")
+    import string
+    ftr = []
+    for i in c:
+        if len(i) >= 1 and i[-1] in string.digits:
+            ftr.append(i)
+    ftr[0] = ftr[0].split(" ")[-1]
+    return ".".join(ftr)
 def deleteSoftwareMission():
     article_data =driver.find_element_by_class_name("article-post").text
     article_data = article_data.split("file")[1]
@@ -507,10 +536,17 @@ def deleteSoftwareMission():
     ip = ip.split("We")[0]
     ip = ip.strip(" ")
     ip = ip.strip(".")
-    print "[DELETEMISSION]: IP to delete from: %s"%(ip)
+   
     if not validIP(ip):
-        print "We couldnt find the IP Please enter it now"
-        ip = raw_input("IP: ")
+        print "[DELETEMISSION]: failed to parse ip running backup parser."
+        ip = extrip(article_data)
+        if not validIP(ip):
+            print "[DELTEMISSION]: We couldnt extract the ip: "
+            ip = raw_input("ip:")
+        else:
+            print "[DELETEMISSION]: IP to delete from: %s"%(ip)
+    else:
+         print "[DELETEMISSION]: IP to delete from: %s"%(ip)
     ## Data parsing Done.
     
     discover_ip(ip)
