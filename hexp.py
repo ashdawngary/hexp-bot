@@ -453,7 +453,10 @@ def tfmoney(a1,ip1,a2,ip2,reload = True,returnquantity = True):
         hackbutton.submit()
         while not "login" in driver.current_url:
             #Account number .//*[@id='content']/div[3]/div/div[1]/div[2]/div[2]/div/div[2]/form/div[1]/div/input
-            
+            if driver.current_url == base_link+"software":
+                print "[TRANSFERMONEY]: Detected redirect, going back to bank"
+                driver.get(base_link+"internet?action=login&type=bank")
+                #https://legacy.hackerexperience.com/internet?action=login&type=bank
             pass
 
             
@@ -474,6 +477,7 @@ def tfmoney(a1,ip1,a2,ip2,reload = True,returnquantity = True):
         driver.find_element_by_xpath(".//*[@id='content']/div[3]/div/div[2]/div[2]/div/div[2]/div[1]/div/div[2]/form/div[1]/div[4]/input").send_keys(ip2)# fill in bip #
         #print "[TFM]: Entering %s under to."%(a2)
         driver.find_element_by_xpath(".//*[@id='content']/div[3]/div/div[2]/div[2]/div/div[2]/div[1]/div/div[2]/form/div[2]/button").submit()            # submit the form
+        time.sleep(5)
     except:
         print "[TFM]: error this account was already hacked please transfer it manually if required."
         return a1,ip1,a2,ip2
@@ -534,11 +538,13 @@ def deleteSoftwareMission():
         driver.find_element_by_id("modal-submit").click()
     # use l-format like https://legacy.hackerexperience.com/internet?view=software&cmd=del&id=8726969
 def getbankaccount():
+    import string
     print "[GBA]: saving current url..."
     last_spot = driver.current_url
     driver.get(base_link + "finances")
     myacc = driver.find_element_by_xpath(".//*[@id='acc1']/div").text
-    myacc = myacc[myacc.index("#")+1:myacc.index("#") + 10]
+    st = myacc.index("#") + 1
+    myacc = myacc[st:]
     iphoster = driver.find_element_by_xpath(".//*[@id='content']/div[3]/div/div/div/div[2]/div[1]/div[2]/div/div[1]/a[2]/span").click()
     iphoster = driver.find_element_by_class_name("browser-bar").get_attribute("value")
     print "[GBA]: restoring url..."
