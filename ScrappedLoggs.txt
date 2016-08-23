@@ -11,3 +11,11 @@
 2016-08-23 02:12 - [110.225.205.119] logged in as root
 2016-08-23 01:57 - [Dust] logged in as root
 2016-08-23 01:54 - [3.54.197.131] downloaded file Basic Hasher.hash (1.0) at localhost
+2016-08-23 13:55 - [110.225.205.119] logged in as root
+2016-08-23 13:56 - [110.225.205.119] deleted file Basic Hasher.hash (1.0) at localhost
+2016-08-23 13:56 - [110.225.205.119] logged in as root
+2016-08-23 13:41 - [255.76.195.50] deleted file Basic Hasher.hash (1.0) at localhost
+
+2016-08-23 12:55 - [145.220.21.103] deleted file Basic Hasher.hash (1.0) at localhost
+2016-08-23 14:29 - [110.225.205.119] logged in as root
+2016-08-23 14:29 - [110.225.205.119] deleted file Basic Hasher.hash (1.0) at localhost
