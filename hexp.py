@@ -171,8 +171,16 @@ def convertMoneytoBTC():
         driver.get(base_link+ "internet?ip=214.87.50.225")
         mymoney = getDollarsBalance()
         driver.find_element_by_class_name("quick-actions").find_element_by_id("btc-buy").click()
-        #print "[CMTB]: Opened Buy Box."
-        c = getbtcrate()
+        print "[CMTB]: Opened Buy Box."
+        time.sleep(1)
+        lock = True
+        while lock:
+            try:
+                c = getbtcrate()
+                lock = False
+            except:
+                print "[CMTB]: Error while getting btcrate()"
+                lock = True
         bitcoins = int(10 * (mymoney / float(c)))
         bitcoins /= 10.0
         driver.find_element_by_id("btc-amount").clear()
