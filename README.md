@@ -71,5 +71,11 @@ To prevent errors while "surfing" the web, use the logout function to safely tra
 ### deleteSoftwareviaID(ID,ip = "None",logged_in = False,bf = True,clearlogs = True)
 This function allows you to delte a software on an ip rather than download. The parameters are the same as downloadviaID(read the meaning of the parameters there).
 
-### def deleteSoftwareMission() [WIP]
-This function can execute a mission based on the mission-page.  Run it on the mission page, it will extract all the data it needs from the garbage text they give you.
+### deleteSoftwareMission() 
+This function can execute a mission based on the mission-page.  Run it on the mission page, it will extract all the data it needs from the garbage text they give you. Not polished yet, but you shouldnt expect any crashing from it.  You may need to feed it the ip since the data parsing part is quite rusty.
+
+### getbankaccount() returns (acc#,ip)(int,int)
+This is used for extracting your own details in a way that will not interput the system but is still dynamic.
+
+### tfmoney(acc1,ip1,acc2,ip2)
+This transferrs money.  There are two toggles -> reload and returnquantity.  Returnquantity is for printing amount transferred, reload is for choosing between logging into acc1 via ip1 or disabliing it if it had already happened.
