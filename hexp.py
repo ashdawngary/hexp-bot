@@ -663,7 +663,7 @@ def getMissions():
                 return title,link
             else:
                 # trash missions like Destroying servers and stealing software
-                print title,link
+                #print title,link
                 pass
             
         except:
@@ -684,11 +684,15 @@ def mission_rush():
     title,link = getMissions()
     while title != "none":
         print "[MRUSH]: doing mission %s "%(title)
-        driver.get(link)
-        driver.find_element_by_xpath(".//*[@id='content']/div[3]/div/div/div/div[2]/div/div[1]/span[1]").click()
-        time.sleep(0.3)
-        driver.find_element_by_xpath(".//*[@id='modal-form']/div[2]/input[3]").click()
-        time.sleep(0.3)
+        try:
+            driver.get(link)
+            driver.find_element_by_xpath(".//*[@id='content']/div[3]/div/div/div/div[2]/div/div[1]/span[1]").click()
+            time.sleep(0.3)
+            driver.find_element_by_xpath(".//*[@id='modal-form']/div[2]/input[3]").click()
+            time.sleep(0.3)
+        except:
+            print "[MRUSH]: Error mission already taken:"
+            title,link = getMissions()
         if "Transfer" in title:
             try:
                 transfermoneymission()
@@ -707,3 +711,4 @@ def mission_rush():
                     
             except:
                 abortmission()
+        title,link = getMissions()
