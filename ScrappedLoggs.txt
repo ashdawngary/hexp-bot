@@ -98,3 +98,35 @@ http://hexmarket.freeforums.net/ Buy or sell good software!
 2016-08-24 00:59 - [227.66.92.191] deleted file Basic Hasher.hash (1.0) at localhost
 2016-08-24 00:59 - [227.66.92.191] logged in as root
 2016-08-24 01:00 - [227.66.92.191] deleted file Basic Hasher.hash (1.0) at localhost
+2016-08-24 01:13 - [227.66.92.191] logged in as root
+2016-08-24 01:12 - [74.88.199.8] hid file Basic Miner.vminer (1.6) at localhost
+2016-08-24 01:13 - [227.66.92.191] deleted file Basic Hasher.hash (1.0) at localhost
+2016-08-24 01:13 - [227.66.92.191] logged in as root
+http://hexmarket.freeforums.net/ Buy or sell good software!
+2016-08-24 01:14 - [227.66.92.191] deleted file Basic Hasher.hash (1.0) at localhost
+2016-08-24 01:19 - [227.66.92.191] logged in as root
+2016-08-24 01:19 - [227.66.92.191] deleted file Basic Hasher.hash (1.0) at localhost
+2016-08-24 01:19 - [227.66.92.191] logged in as root
+ software!
+2016-08-24 01:20 - [227.66.92.191] deleted file Basic Hasher.hash (1.0) at localhost
+2016-08-24 01:20 - [227.66.92.191] logged in as root
+2016-08-24 01:20 - [227.66.92.191] logged in as root
+http://hexmarket.freeforums.net/ Buy or sell good software!2016-08-24 00:11 - [55.156.66.232] installed virus heartbleed.vspam (1.0) at localhost
+2016-08-24 00:11 - [55.156.66.232] uploaded file heartbleed.vspam (1.0) at localhost
+2016-08-24 01:21 - [227.66.92.191] logged in as root
+2016-08-24 01:21 - [227.66.92.191] deleted file Basic Hasher.hash (1.0) at localhost
+2016-08-24 01:32 - [227.66.92.191] logged in as root
+2016-08-24 01:33 - [227.66.92.191] deleted file Basic Hasher.hash (1.0) at localhost
+2016-08-24 01:33 - [227.66.92.191] logged in as root
+2016-08-24 01:34 - [227.66.92.191] deleted file Basic Hasher.hash (1.0) at localhost
+2016-08-24 01:34 - [227.66.92.191] logged in as root
+2016-08-24 01:21 - [227.66.92.191] deleted file Basic Hasher.hash (1.0) at localhost
+2016-08-24 01:34 - [227.66.92.191] logged in as root
+2016-08-24 01:43 - [194.204.76.170] logged in as root
+2016-08-24 01:41 - [233.36.72.249] transferred $2430 from #970757719 (175.236.95.19) to #288406287 at localhost
+
+2016-08-24 01:32 - [233.36.72.249] transferred $1568 from #826148 (236.234.189.128) to #288406287 at localhost
+
+2016-08-24 01:30 - [233.36.72.249] transferred $1540 from #664640 (236.234.189.128) to #288406287 at localhost
+2016-08-24 01:30 - [103.74.119.136] logged in as root
+2016-08-24 01:30 - [103.74.119.136] logged on account #505982987
