@@ -522,10 +522,13 @@ def tfmoney(a1,ip1,a2,ip2,reload = True,returnquantity = True):
         bnumbox.send_keys(a1)
         hackbutton = driver.find_element_by_xpath(".//*[@id='content']/div[3]/div/div[1]/div[2]/div[2]/div/div[2]/form/div[2]/button")
         hackbutton.submit()
+        c_url = driver.current_url
         while not "login" in driver.current_url:
             #Account number .//*[@id='content']/div[3]/div/div[1]/div[2]/div[2]/div/div[2]/form/div[1]/div/input
             if driver.current_url == base_link+"software":
                 print "[TRANSFERMONEY]: Detected redirect, going back to bank"
+                driver.get(base_link+"internet?action=login&type=bank")
+            elif driver.current_url != c_url:
                 driver.get(base_link+"internet?action=login&type=bank")
                 #https://legacy.hackerexperience.com/internet?action=login&type=bank
             pass
