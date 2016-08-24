@@ -536,8 +536,27 @@ def tfmoney(a1,ip1,a2,ip2,reload = True,returnquantity = True):
             
         del hackbutton, bnumbox
         print "[TRANSFERMONEY]: Going to Account login button."
-        accloginbutton = driver.find_element_by_xpath(".//*[@id='loginform']/div[3]/span[3]/input")
+        if driver.find_element_by_name("acc").text != a1:
+            print "[TRANSFERMONEY]: Error: Data has been wiped"
+            driver.get(base_link+"internet?action=hack&type=bank")
+            bnumbox = driver.find_element_by_xpath(".//*[@id='content']/div[3]/div/div[1]/div[2]/div[2]/div/div[2]/form/div[1]/div/input")
+            bnumbox.clear()
+            bnumbox.send_keys(a1)
+            hackbutton = driver.find_element_by_xpath(".//*[@id='content']/div[3]/div/div[1]/div[2]/div[2]/div/div[2]/form/div[2]/button")
+            hackbutton.submit()
+            print "[TRANSFERMONEY]Parsing Data"
+            c = driver.find_element_by_xpath(".//*[@id='content']/div[3]/div/div[1]/div[2]").text
+            c = c.split(" ")
+            usr = c[7][:-1]
+            pss = c[11][:-1]
+            print "[TRANSFERMONEY]: Found %s has pss of %s"%(usr,pss)
+            driver.find_element_by_name("acc").clear()
+            driver.find_element_by_name("pass").clear()
+            driver.find_element_by_name("acc").send_keys(str(usr))
+            driver.find_element_by_name("pass").send_keys(str(pss))
 
+                
+        accloginbutton = driver.find_element_by_xpath(".//*[@id='loginform']/div[3]/span[3]/input") 
         accloginbutton.submit()
     if returnquantity:
         tr =  viewbankaccount()
